@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-deploy-test1
+  namespace: test-eks   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-running-test
+  template:
+    metadata:
+      labels:
+        app: deploy-running-test
+    spec:
+      containers:
+      - name: eks-deploy-env1
+        image: 304816588275.dkr.ecr.us-west-2.amazonaws.com/kspm_vulnerability-fluentd-latest
+        ports:
+        - containerPort: 80
+        volumeMounts: 
+        - mountPath: /etc/secret-vol
+          name: secret-vol
+          readOnly: true
+      volumes: 
+      - name: secret-vol
+        secret: 
+          secretName: demo-creds
